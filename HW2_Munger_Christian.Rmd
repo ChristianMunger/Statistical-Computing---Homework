@@ -1,0 +1,97 @@
+---
+title: "HW2_Munger_Christian"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r warning=FALSE}
+#1.
+#a.
+strikedat = read.table("strike.txt", header=TRUE)
+
+#b.
+is.data.frame(strikedat)
+nrow(strikedat)
+ncol(strikedat)
+
+#c.
+names(strikedat)
+
+#d.
+strikedat[123,4]
+
+#e.
+strikedat[611:625,2]
+
+#f.
+#This command renames the various columns in the dataframe in the order of the vector below.
+names(strikedat) = c("natcode","year","strikevol","unemployment","inflation","leftwingprop","unioncentr")
+strikedat
+
+#g.
+attach(strikedat)
+strikedat$leftwingprop.scaled <- leftwingprop/100
+head(strikedat, 5)
+
+
+#h.
+#There is no trend over time.
+strikesubset <- subset(strikedat, natcode == 1)
+plot(x=strikesubset$year, y=strikesubset$leftwingprop.scaled, type ='l')
+
+#i.
+strikedat.fix <- replace(strikedat, c(4,6) , c(unemployment/100,leftwingprop/100))
+head(strikedat.fix,5)
+
+
+#2.
+library(ade4)
+data(olympic)
+attach(olympic)
+
+#a.
+View(olympic)
+length(olympic)
+
+names(olympic)
+typeof(tab) #list
+typeof(score) #double
+
+#b.
+#This made the tab list viewable as a dataframe.
+olympicmat <- tab
+as.matrix(olympicmat)
+as.data.frame(olympicmat)
+View(olympicmat)
+
+#c. 
+names(olympicmat) = c("100 meters", "long jump", "shotput", "high jump", "400 meters", "110-meter hurdles", "discus throw","pole vault", "javelin", "1500 meters")
+head(olympicmat, 10)
+
+#d.
+rownames(olympicmat)[rownames(olympicmat) == '1'] <- 'ironman'
+rownames(olympicmat)[rownames(olympicmat) == '2'] <- 'wolverine'
+rownames(olympicmat)[rownames(olympicmat) == '3'] <- 'hulk'
+head(olympicmat, 10)
+
+#e.
+olympicmat[nrow(olympicmat) + 1,] = c(8.52, 10.31, 16.28, 4.51, 30.12, 13.62, 50.5, 10.1, 100.24, 200.12)
+rownames(olympicmat)[rownames(olympicmat) == '34'] <- 'thor'
+tail(olympicmat,10)
+attach(olympicmat)
+#Thor has second best discus throw
+hist(`discus throw`)
+
+#f.
+olympic$tab<-olympicmat
+names(olympic)<-paste(c("olypmicmat","score"))
+
+#g.
+olympic$year<-"1998"
+olympic$sporttype<-"decathlon"
+```
