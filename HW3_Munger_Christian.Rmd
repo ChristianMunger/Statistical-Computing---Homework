@@ -1,0 +1,84 @@
+---
+title: "HW_3_Munger_Christian"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+#1.
+#a.
+
+library(ade4)
+data(olympic)
+attach(olympic)
+
+#for loop
+for(i in tab){
+  print(sd(i))
+}
+
+#using apply function
+apply(tab,2,sd)
+
+
+
+#b.
+
+for(leap_year in seq(1900,2018)){
+  if(leap_year%%4 == 0){
+  print(leap_year)}
+}
+
+#c.
+x = seq(-3,3,by = 0.1)
+y <- ifelse(abs(x) > 1, 2*abs(x)-1, x^2)
+y
+plot(x,y)
+
+
+
+#2.
+fib={}
+fib[1] =0
+fib[2]=1
+
+for(n in 3:50){
+fib[n]= fib[n-1] + fib[n-2]
+}
+print(fib)
+
+
+#3.
+func <- function(x) {
+  x^3-3*x-3
+}
+
+dfunc <- function(x) {
+  3*x^2 - 3
+}
+
+x0 = 2
+
+tolerance = .0001
+
+root <- function(func, dfunc, x0, tolerance) {
+    x = x0
+    while (abs(func(x)) > tolerance) {
+        x = x - func(x)/dfunc(x)
+    }
+    return(x)
+    }
+
+root(func, dfunc, x0, tolerance)
+  
+
+  
+```
+
+
+

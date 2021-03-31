@@ -1,0 +1,106 @@
+---
+title: "HW4_Munger_Christian"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+Trump = "Donald Trump"
+others = c("Barack Obama", "George Bush", "Bill Clinton")
+
+#1.
+#a.
+substr(Trump, 1, 5)
+
+#b.
+substr(others , start = 1 , stop = 5)
+
+#c.
+presidents <- c(Trump, others)
+presidents
+
+#d.
+substrRight <- function(string, n){
+  substr(string, nchar(string) - (n - 1), nchar(string))
+}
+substrRight(presidents, 3)
+
+#e.
+presidents.borg <- presidents
+
+presidents.borg
+
+gsub("rump|bama|Bush|nton", 'borg', presidents.borg)
+
+#f.
+#Replaces characters 5 through 9 with the word right. T does not appear because Dietrich only has 8 characters. 
+college = "Dietrich"
+substr(college, 5, 9) = "right"
+
+
+#Replaces characters 1 throught 3 with Live. Live has 4 characters so e is left off.
+college = "Dietrich"
+substr(college, 1, 3) = "Live"
+
+#Replaces the first letter of fat and lamp with c giving cat and camp and the first letter of hat and glade with b giving bat and blade.
+words = c("fat", "hat", "lamp", "glade")
+substr(words, 1, 1) = c("c", "b")
+
+#Replaces the first and third element with kitty and replaces the second and fourth element with doggy for characters 1 through 5.  Some characters of kitty and doggy may be cut off due to the word length of the original elements in animals.
+animals = c("cat", "lion", "piggy", "chicken")
+substr(animals, 1, 5) = c("kitty", "doggy")
+
+#Replaces the end of elements 1 and 3 with Good and the end of elements 2 and 4 with Bad.
+subjects = c("Statistics", "Computer Science", "Mathematics", "Engineering")
+ratings = c("Good", "Bad")
+substr(subjects, nchar(subjects)-nchar(ratings)+1, nchar(subjects)) = ratings
+
+
+
+#2.
+#a.
+presidents = c("Donald Trump", "Barack Obama", "George Bush", "Bill Clinton")
+presidents.list <- strsplit(presidents, " ")
+presidents.list
+
+#b.
+print(presidents.list[2]); print(presidents.list[4])
+
+#c.
+#Places the presidents.list into a matrix. Without byrow = TRUE the elements would be assigned by columns.
+presidents.mat <- matrix(unlist(presidents.list), 4, 2, byrow = TRUE)
+presidents.mat
+
+#d.
+#Takes the second element of the vector and splits into strings at each occurrence of 'a'.
+strsplit(presidents[2], split = "a")
+
+#Splits the first and third elements where a space occurs and splits the second and fourth elements where the letter 'a' occurs.
+strsplit(presidents, split=c(" ", "a"))
+
+#e.
+vice.presidents <- c("Mike Pence", "Joe Biden", "Dick Cheney", "Al Gore")
+
+pairs = paste(presidents, " & ", vice.presidents)
+pairs
+
+
+#f.
+paste(pairs, collapse=", ")
+
+#g.
+paste(rev(pairs), collapse = ", ")
+
+#h.
+vice.presidents.mat <- matrix(unlist(strsplit(vice.presidents, " ")), 4, 2, byrow = TRUE)
+vice.presidents.mat
+
+
+#i.
+paste(presidents.mat[ ,2], vice.presidents.mat[ ,2], sep = "+", collapse = ", ")
+```
+
+

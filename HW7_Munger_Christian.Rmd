@@ -1,0 +1,118 @@
+---
+title: "HW7_Munger_Christian"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+#1.
+#a.
+r1 <- rnorm(50000)
+mat <- matrix(r1, nrow = 1000, ncol = 50)
+
+#b.
+#The expected mean of these values should be 0
+mean(mat[,7])
+mean(mat[,37])
+
+#c.
+mat.col.means <- colMeans(mat)
+mat.col.means
+
+#The mean of the columns is equal to the mean of the matrix.
+mean(mat.col.means)
+mean(mat)
+
+#d.
+#The distribution of this vector should be a chi square distribution with 50 degrees of freedom.
+mat.row.chisq <- Matrix::rowSums(mat ** 2)
+
+
+#e.
+#This distribution is approximately normal.  To normalize the data we use 50 because that is the mean and degrees of freedom and sqrt(100) because that is the standard deviation
+mat.row.chisq.standardized <- (mat.row.chisq-50)/sqrt(100)
+hist(mat.row.chisq.standardized)
+
+#f.
+mat.cor <- cor(mat)
+
+#50 rows and 50 columns
+dim(mat.cor)
+
+#Max correlation other than 1
+max(mat.cor[mat.cor < 1])
+
+#Returns the row and column for the max correlation
+which(mat.cor == max(mat.cor[mat.cor < 1]), arr.ind = TRUE)
+
+
+
+#Since the highest correlation other than 1 was very low(<.2), this picture matches what I would expect.  
+library(fields)
+image.plot(mat.cor)
+
+
+#2.
+library(MASS)
+data(Cars93)
+
+
+#a.
+attach(Cars93)
+#(16.87504, 22.14431)
+t.test(Price, conf.level = .99)
+
+#b.
+us <- subset(Cars93, Origin == 'USA', select = c('Price'))
+non.us <- subset(Cars93, Origin == 'non-USA', select = c('Price'))
+
+#p-value > .05, so we fail to reject the null hypothesis that the true mean is 0.
+t.test(us, non.us, alternative = 'two.sided')
+
+#c.
+#p-value > .05, so we fail to reject the null hypothesis.
+t.test(us, non.us, alternative = 'less')
+
+
+#d.
+us.air <- subset(Cars93, Origin == 'USA', select = c('AirBags'))
+non.us.air <- subset(Cars93, Origin == 'non-USA', select = c('AirBags'))
+
+#So, the proportion of US cars without airbags is 16/48 or .3333.
+ftable(us.air)
+
+#So, the proportion of non-US cars without airbags is 18/45 or .4
+ftable(non.us.air)
+
+#p-value > .05, so we fail to reject the null hypothesis that the proportions are equivalent.
+prop.test(c(16,18), c(48,45))
+
+#e.
+#The histogram does not appear normally distributed.
+hist(Price)
+
+#P-value = 4.235e-07 < .05  Thus, the data is not normally distributed and the results from a-d are not appropriate because the tests in these problems assume normality.
+shapiro.test(Price)
+
+#f.
+#This loop takes a bootstrap sample of the price and resamples the data. The loop then takes the mean of this sample and repeats this 1000 times/
+bootstrap.mean = NULL
+for(i in 1:1000){
+  bootstrap.sample = sample(Cars93$Price, length(Cars93$Price), replace=TRUE)
+  bootstrap.mean = c(bootstrap.mean, mean(bootstrap.sample))
+}
+
+#This normalizes the bootstrap.mean data and returns a histogram showing an approximately normal distribution for bootstrap.mean.standardized.
+bootstrap.mean.standardized = (bootstrap.mean-mean(bootstrap.mean))/sd(bootstrap.mean)
+hist(bootstrap.mean.standardized, probability=TRUE, ylim=c(0,0.5));curve(dnorm(x), add=TRUE, col="red")
+
+
+
+```
+
+

@@ -1,0 +1,126 @@
+---
+title: "HW6_Munger_Christian"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+
+
+```{r}
+library(MASS)
+data(cats)
+
+#1.
+#This gives a 6 number summary for the two numerical columns of the cats dataframe including a minimum, 1st quartile, median, mean, 3rd quartile, and maximum.  Similar to a boxplot.
+summary(cats)
+
+#2.
+attach(cats)
+#Yes, the mean of Hwt looks similar to that of what was given from summary(cats)
+hist(Hwt, probability = TRUE); abline(v = mean(Hwt), col='red')
+
+#3.
+mean(Hwt)
+var(Hwt)
+
+a1 <- (mean(Hwt)^2)/var(Hwt)
+a1
+
+s1 <- var(Hwt)/mean(Hwt)
+s1
+
+#4.
+summary.stats <- function(x){
+  mean = mean(x)
+  variance = sd(x)^2
+  
+    return(list(mean, variance))
+}
+
+summary.stats(Hwt)
+
+#5.
+gamma.estimates <- function(x){
+  
+mean <- mean(x);
+variance<- var(x);
+a = (mean*mean)/variance;
+s = variance/mean;
+
+      return(list(c(a,s)))
+}
+
+#The estimates given from this function agrees with my previous calculated estimates.
+gamma.estimates(Hwt)
+
+
+#6.
+library(dplyr)
+Female.Cats <- gamma.estimates(filter(cats,Sex==("F"))$Hwt)
+Female.Cats
+
+Male.Cats <- gamma.estimates(filter(cats,Sex==("M"))$Hwt)
+Male.Cats
+
+
+#7.
+#This gamma distribution is fairly consistant with the histogram. However, there are some inconsistancies towards the middle of the curve.
+{hist(filter(cats,Sex==("F"))$Hwt,prob = TRUE)
+curve(dgamma(x, shape=45.9399792, scale=0.2003076), add=TRUE, col="red")}
+
+
+
+
+
+#8.
+#This curve is very consistant with the histogram.
+{hist(filter(cats,Sex==("M"))$Hwt,prob = TRUE)
+curve(dgamma(x, shape=19.8357612  , scale=0.5708216), add=TRUE, col="red")}
+
+
+#9.
+{par(mfrow=c(2,1))
+hist(filter(cats,Sex==("F"))$Hwt,prob = TRUE, xlim = c(6,15), ylim = c(0, .3)) 
+curve(dgamma(x, shape=45.9399792, scale=0.2003076), add=TRUE, col="red")
+
+hist(filter(cats,Sex==("M"))$Hwt,prob = TRUE, xlim = c(6,15), ylim = c(0, .3))
+curve(dgamma(x, shape=19.8357612  , scale=0.5708216), add=TRUE, col='red')}
+
+#10
+female.Hearts = subset(cats, Sex == 'F', select = c(Sex, Hwt))
+male.Hearts = subset(cats, Sex == 'M', select = c(Sex, Hwt))
+
+#These graphs are comparable as they are fairly similar.
+{par(mfrow=c(1,2))
+hist(rgamma(male.Hearts$Hwt, shape = 19.8357612), breaks = 10)
+hist(male.Hearts$Hwt, breaks = 10)}
+
+#11.
+gamma.plots <- function(n) {
+  par(mfrow=c(1,2))
+  h1 = hist(rgamma(n, shape = (mean(n)*mean(n))/var(n)), breaks = 10)
+  h2 = hist(n, breaks = 10)
+    return(c(h1, h2))
+}
+gamma.plots(male.Hearts$Hwt)
+gamma.plots(female.Hearts$Hwt)
+
+#12.
+gamma.plots.new <- function(z){
+  par(mfrow=c(1,2))
+  h1 = hist(rgamma(z, shape = (mean(z)*mean(z))/var(z)), breaks = 10, xlim =  c(0,30))
+  h2 = hist(z, xlim =  c(0,30), breaks = 10)
+  
+}
+
+gamma.plots.new(male.Hearts$Hwt)
+```
+
+
+
+
+

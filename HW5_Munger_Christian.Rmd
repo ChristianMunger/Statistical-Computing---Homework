@@ -1,0 +1,123 @@
+---
+title: "HW5_Munger_Christian"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+ 
+#1.
+plot(x <- seq(0,2,length=50), .05*x^2 - sin(x)*cos(x) + .1*exp(1+log(x)))
+
+
+#2.
+#a.
+f1 <- function(x) {x^3-3*x-3}
+df1 <- function(x) {3*x^2 - 3}
+
+newton <- function(f, df, x0, stop) {
+    x = x0
+    iter <- 0
+    while (abs(f(x)) > stop) {
+        x = x - f(x)/df(x)
+    x.final = x
+    iter <- iter + 1
+    
+    }
+    print(list('x.final' = x, 'total.step' = iter, 'f.final'=f(x)))
+}
+
+result1 = newton(f=f1, df=df1, x0=2, stop=0.0001)
+
+
+
+#b.
+f2 <- function(x) {x^3 - 2*x + 2}
+df2 <- function(x) {3*x^2-2}
+
+newton.new <- function(f, df, x0, stop, max.step) {
+    x = x0
+    iter = 0
+    while (abs(f(x)) > stop && iter < max.step) {
+        x = x - f(x)/df(x)
+    x.final = x
+    iter <- iter + 1
+    
+    }
+    
+    print(list('x.final' = x, 'total.step' = iter, 'f.final'=f(x)))
+  }
+
+
+result2 = newton.new(f=f2, df=df2, x0=5, stop=0.0001, max.step=10)
+
+#Compared to result2, result3 has more steps which gives a more accurate root than result2.
+result3 = newton(f=f2, df=df2, x0=5, stop=0.0001)
+
+
+
+
+#3.
+word.count = function(mytext, n) {
+  lines = readLines(mytext)
+  text = paste(lines, collapse=" ")
+  words = strsplit(text, split=" ")[[1]]
+  wc = table(words)
+  wc = sort(wc, decreasing=TRUE)
+  return(wc[1:n])
+}
+
+#a.
+library(readr)
+obama <- read_tsv(file = "C:\\Users\\cmunger\\Downloads\\obama.txt")
+#This function returns the count of the n most popular words from the text file.
+wc1 = word.count(mytext="obama.txt",n=10)
+wc1
+
+
+#b.
+word.count.new1 = function(mytext, n, toupper) {
+    lines = readLines(mytext)
+  text = paste(lines, collapse=" ")
+  words = strsplit(text, split=" ")[[1]]
+  wc = table(words)
+  wc = sort(wc, decreasing=TRUE)
+  if(toupper == TRUE){
+    paste(toupper(names(wc[1:n])), wc[1:n])
+  }
+  else if(toupper == FALSE){
+   return(wc[1:n])
+  }
+  else{
+    return('need toupper')
+  }
+}
+
+wc2 = word.count.new1(mytext="obama.txt", n=10, toupper=TRUE)
+wc2
+wc3 = word.count.new1(mytext="obama.txt", n=10, toupper=FALSE)
+wc3
+
+
+#c.
+word.count.new2= function(mytext, n) {
+  lines = readLines(mytext)
+  text = paste(lines, collapse=" ")
+  words = strsplit(text, split=" ")[[1]]
+  wc = table(words)
+  wc = sort(wc, decreasing=TRUE)
+  total.number.words = length(words)
+  number.unique.words = length(unique(words))
+  print(list(wc[1:n], 'total words' = total.number.words, 'unique words' = number.unique.words))
+}
+wc4 = word.count.new2(mytext="obama.txt", n=10)
+
+
+```
+
+
+
