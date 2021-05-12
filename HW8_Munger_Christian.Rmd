@@ -1,0 +1,104 @@
+---
+title: "HW8_Munger_Christian"
+author: "Christian Munger"
+date: "4/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+
+#1.
+#load data
+load("C:\\Users\\cmunger\\Downloads\\flu.Rdata")
+is.data.frame(flumat)
+
+
+#reorder season
+flumat1 = flumat[order(flumat$season),]
+
+
+plot(flumat$wili,type="l", xlab = 'time', ylab = 'wili')
+
+#2.
+flumat.12 <- subset(flumat, flumat$week == c(49, 50, 51, 52))
+head(flumat.12, 10)
+
+#mean wili for each season in flumat.12 
+means <- aggregate(flumat.12$wili, by = list(flumat.12$season), FUN = mean)
+
+
+plot(means, type = 'l', xlab = 'year', ylab = 'average wili')
+
+
+
+
+#Three lowest points are (15, 1.259864), (5, 1.287877), (4,1.673166)
+
+
+#Three highest points are (14, 3.549263), (16,3.627064), (7,4.263759)
+
+
+#Adding these points to the plot
+{plot(means, type = 'l', xlab = 'time', ylab = 'average wili')
+
+points(15, 1.259864, col = 'blue')
+points(5, 1.287877 ,col = 'blue')
+points(4,1.673166, col = 'blue') 
+points(14, 3.549263,col = 'red')
+points(16,3.627064,col = 'red')
+points(7,4.263759,col = 'red')}
+
+
+
+#3.
+flumat.by.week <-  flumat[with(flumat, order(flumat$season, flumat$week)),]
+
+#first 10 rows
+head(flumat.by.week, 10)
+
+#last 10 rows
+tail(flumat.by.week, 10)
+
+
+
+#4.
+flumat.wide <- reshape(flumat, idvar = "week", timevar = "season", direction = "wide")
+
+#first 10 rows
+head(flumat.wide, 10)
+
+#last 10 rows
+tail(flumat.wide, 10)
+
+
+#5.
+flumat.wide.merged <- merge(flumat.wide, flumat.new)
+
+#first 10 rows
+head(flumat.wide.merged, 10)
+
+
+
+#6.
+#While there is some linearity in the model shown in the scatterplot, Week 50 wili is not a very good predictor of week 51 wili.  The residuals do not appear normally distributed and the Adjusted R^2 is very low(~.23).
+flumat.copy = flumat               # we'll work on a copy of the data
+week50 = (flumat.copy$week == 50)   # the first boolean vector
+week51 = (flumat.copy$week == 51)   # the second boolean vector
+week50wili = flumat.copy$wili[week50 == TRUE]
+week51wili = flumat.copy$wili[week51 == TRUE]
+flureg = lm(week51wili~week50wili)
+summary(flureg)
+
+#The regression coefficients make sense for the linear model.
+coef(flureg)
+
+#scatterplot with regression line
+ {plot(week51wili~week50wili)
+abline(lm(week51wili~week50wili), col = 'red')}
+```
+

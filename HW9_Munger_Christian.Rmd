@@ -1,0 +1,80 @@
+---
+title: "HW9_Munger_Christian"
+author: "Christian Munger"
+date: "4/14/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+
+#1.
+ckm_nodes <- read.csv("C:\\Users\\cmunger\\Downloads\\ckm_nodes.csv")
+
+ckm_network <- read.table("C:\\Users\\cmunger\\Downloads\\ckm_network.dat")
+
+
+dim(ckm_nodes)
+
+
+
+
+#2.
+sum(na.omit(ckm_nodes$adoption_date <= 17))
+
+sum(na.omit(ckm_nodes$adoption_date == Inf))
+
+sum(is.na(ckm_nodes$adoption_date))
+
+
+
+
+#3.
+library(purrr)
+index.notna <- discard(ckm_nodes$adoption_date, is.na)
+length(index.notna)
+
+
+clean.ckm.nodes <- ckm_nodes[!is.na(ckm_nodes$adoption_date ), ]
+
+#4.
+plot(clean.ckm.nodes$adoption_date, ylab = 'adoption date', xlab = 'time')
+
+sums <- data.frame(sum(clean.ckm.nodes$adoption_date == 1), sum(clean.ckm.nodes$adoption_date == 2),sum(clean.ckm.nodes$adoption_date == 3),sum(clean.ckm.nodes$adoption_date == 4),sum(clean.ckm.nodes$adoption_date == 5),sum(clean.ckm.nodes$adoption_date == 6),sum(clean.ckm.nodes$adoption_date == 7),sum(clean.ckm.nodes$adoption_date == 8),sum(clean.ckm.nodes$adoption_date == 9),sum(clean.ckm.nodes$adoption_date == 10),sum(clean.ckm.nodes$adoption_date == 11),sum(clean.ckm.nodes$adoption_date == 12),sum(clean.ckm.nodes$adoption_date == 13),sum(clean.ckm.nodes$adoption_date == 14),sum(clean.ckm.nodes$adoption_date == 15),sum(clean.ckm.nodes$adoption_date == 16),sum(clean.ckm.nodes$adoption_date == 17))
+
+
+plot(t(sums), ylab = 'adoption date', xlab = 'time')
+
+
+#5.
+index.m2 <- na.omit(which(ckm_nodes$adoption_date <=2))
+index.m2
+
+#6.
+index.m14 <- na.omit(which(ckm_nodes$adoption_date > 14))
+index.m14
+
+#7.
+dim(ckm_network)
+
+ckm.network.clean <- ckm_network[index.notna,1:125 ]
+dim(ckm.network.clean)
+
+
+
+#8.
+number.contacts <- rowSums(ckm.network.clean)
+number.contacts[41]
+
+
+#9.
+sum(number.contacts[37] & na.omit(which(ckm_nodes$adoption_date <= 5)))
+
+3/sum(number.contacts[37] & na.omit(which(ckm_nodes$adoption_date <= 5)))
+
+```
+
